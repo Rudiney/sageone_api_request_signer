@@ -24,6 +24,18 @@ RSpec.describe SageoneApiRequestSigner do
     expect(obj.access_token).to   eql 'token'
   end
 
+  subject do
+    described_class.new(
+      request_method: 'post',
+      url: 'https://api.sageone.com/accounts/v1/contacts?config_setting=foo',
+      nonce: 'd6657d14f6d3d9de453ff4b0dc686c6d',
+      body_params: {
+        'contact[contact_type_id]' => 1,
+        'contact[name]' => 'My Customer',
+      }
+    )
+  end
+
   describe '#nonce' do
     it 'should build a rondom one by default' do
       expect(SecureRandom).to receive(:hex).once.and_return('random nonce')
@@ -88,14 +100,6 @@ RSpec.describe SageoneApiRequestSigner do
 
   describe '#signature_base_string' do
     it 'should follow the website example' do
-      subject.request_method = 'post'
-      subject.url = 'https://api.sageone.com/accounts/v1/contacts?config_setting=foo'
-      subject.nonce = 'd6657d14f6d3d9de453ff4b0dc686c6d'
-      subject.body_params = {
-        'contact[contact_type_id]' => 1,
-        'contact[name]' => 'My Customer',
-      }
-
       expect(subject.signature_base_string).to eql 'POST&https%3A%2F%2Fapi.sageone.com%2Faccounts%2Fv1%2Fcontacts&config_setting%3Dfoo%26contact%255Bcontact_type_id%255D%3D1%26contact%255Bname%255D%3DMy%2520Customer&d6657d14f6d3d9de453ff4b0dc686c6d'
     end
   end
@@ -105,6 +109,13 @@ RSpec.describe SageoneApiRequestSigner do
       subject.signing_secret = '297850d556xxxxxxxxxxxxxxxxxxxxe722db1d2a'
       subject.access_token = 'cULSIjxxxxxIhbgbjX0R6MkKO'
       expect(subject.signing_key).to eql '297850d556xxxxxxxxxxxxxxxxxxxxe722db1d2a&cULSIjxxxxxIhbgbjX0R6MkKO'
+    end
+  end
+
+  describe '#signature' do
+    it 'should hash this way' do
+      expected = Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), subject.signing_key, subject.signature_base_string))
+      expect(subject.signature).to eql expected
     end
   end
 end

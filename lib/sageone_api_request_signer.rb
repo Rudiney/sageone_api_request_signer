@@ -1,4 +1,5 @@
 require "sageone_api_request_signer/version"
+require "base64"
 
 # "Sign" an Sageone API request call following the steps detailed here:
 # https://developers.sageone.com/docs#signing_your_requests
@@ -13,7 +14,7 @@ class SageoneApiRequestSigner
   end
 
   def request_method
-    @request_method.upcase!
+    @request_method.to_s.upcase!
   end
 
   def nonce
@@ -59,6 +60,10 @@ class SageoneApiRequestSigner
       percent_encode(signing_secret),
       percent_encode(access_token)
     ].join('&')
+  end
+
+  def signature
+    @signature ||= Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), signing_key, signature_base_string))
   end
 
   private
