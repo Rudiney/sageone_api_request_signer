@@ -23,4 +23,17 @@ RSpec.describe SageoneApiRequestSigner do
     expect(obj.secret).to         eql 'secret'
     expect(obj.token).to          eql 'token'
   end
+
+  describe '#nonce' do
+    it 'should build a rondom one by default' do
+      expect(SecureRandom).to receive(:hex).once.and_return('random nonce')
+      obj = described_class.new
+
+      expect(obj.nonce).to eql 'random nonce'
+    end
+  end
+
+  describe '#base_url' do
+
+  end
 end

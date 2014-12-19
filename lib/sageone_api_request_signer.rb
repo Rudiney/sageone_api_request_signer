@@ -12,7 +12,11 @@ class SageoneApiRequestSigner
     end
   end
 
-  def request_method=(v)
-    @request_method = v.upcase
+  def request_method
+    @request_method.upcase!
+  end
+
+  def nonce
+    @nonce ||= SecureRandom.hex
   end
 end
