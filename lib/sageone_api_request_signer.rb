@@ -19,4 +19,18 @@ class SageoneApiRequestSigner
   def nonce
     @nonce ||= SecureRandom.hex
   end
+
+  def uri
+    @uri ||= URI(url)
+  end
+
+  def base_url
+    @base_url ||= [
+      uri.scheme,
+      '://',
+      uri.host,
+      (":#{uri.port}" if uri.port != uri.default_port),
+      uri.path
+    ].join
+  end
 end

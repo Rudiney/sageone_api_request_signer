@@ -33,7 +33,22 @@ RSpec.describe SageoneApiRequestSigner do
     end
   end
 
-  describe '#base_url' do
+  describe '#uri' do
+    it 'should be an URI with the URL' do
+      subject.url = 'http://www.google.com.br'
+      expect(subject.uri).to eql URI('http://www.google.com.br')
+    end
+  end
 
+  describe '#base_url' do
+    describe 'using the default port' do
+      before { subject.url = 'https://api.sageone.com/accounts/v1/contacts?config_setting=foo' }
+      it { expect(subject.base_url).to eql 'https://api.sageone.com/accounts/v1/contacts' }
+    end
+
+    describe 'with a specific port' do
+      before { subject.url = 'https://api.sageone.com:123/accounts/v1/contacts?config_setting=foo' }
+      it { expect(subject.base_url).to eql 'https://api.sageone.com:123/accounts/v1/contacts' }
+    end
   end
 end
