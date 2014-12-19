@@ -4,7 +4,7 @@ require "sageone_api_request_signer/version"
 # https://developers.sageone.com/docs#signing_your_requests
 class SageoneApiRequestSigner
 
-  attr_accessor :request_method, :url, :body_params, :nonce, :secret, :token
+  attr_accessor :request_method, :url, :body_params, :nonce, :client_secret, :access_token
 
   def initialize(params = {})
     params.each do |attr, val|
@@ -43,6 +43,15 @@ class SageoneApiRequestSigner
       key_value_pair = percent_encode_pair(url_params.merge(body_params).sort)
       key_value_pair.map{|pair| pair.join('=') }.join('&')
     )
+  end
+
+  def signature_base_string
+    @signature_base_string ||= [
+      request_method,
+      percent_encode(base_url),
+      percent_encode(parameter_string),
+      percent_encode(nonce)
+    ].join('&')
   end
 
   private

@@ -3,8 +3,8 @@ RSpec.describe SageoneApiRequestSigner do
   it { expect(subject).to respond_to :url }
   it { expect(subject).to respond_to :body_params }
   it { expect(subject).to respond_to :nonce }
-  it { expect(subject).to respond_to :secret }
-  it { expect(subject).to respond_to :token }
+  it { expect(subject).to respond_to :client_secret }
+  it { expect(subject).to respond_to :access_token }
 
   it 'should set everything on initialize' do
     obj = described_class.new(
@@ -12,16 +12,16 @@ RSpec.describe SageoneApiRequestSigner do
       url: 'url',
       body_params: 'body',
       nonce: 'nonce',
-      secret: 'secret',
-      token: 'token',
+      client_secret: 'secret',
+      access_token: 'token',
     )
 
     expect(obj.request_method).to eql 'METHOD'
     expect(obj.url).to            eql 'url'
     expect(obj.body_params).to    eql 'body'
     expect(obj.nonce).to          eql 'nonce'
-    expect(obj.secret).to         eql 'secret'
-    expect(obj.token).to          eql 'token'
+    expect(obj.client_secret).to  eql 'secret'
+    expect(obj.access_token).to   eql 'token'
   end
 
   describe '#nonce' do
@@ -83,6 +83,20 @@ RSpec.describe SageoneApiRequestSigner do
       }
 
       expect(subject.parameter_string).to eql 'aaa=1&bee=2&dee=3&zee=4'
+    end
+  end
+
+  describe '#signature_base_string' do
+    it 'should follow the website example' do
+      subject.request_method = 'post'
+      subject.url = 'https://api.sageone.com/accounts/v1/contacts?config_setting=foo'
+      subject.nonce = 'd6657d14f6d3d9de453ff4b0dc686c6d'
+      subject.body_params = {
+        'contact[contact_type_id]' => 1,
+        'contact[name]' => 'My Customer',
+      }
+
+      expect(subject.signature_base_string).to eql 'POST&https%3A%2F%2Fapi.sageone.com%2Faccounts%2Fv1%2Fcontacts&config_setting%3Dfoo%26contact%255Bcontact_type_id%255D%3D1%26contact%255Bname%255D%3DMy%2520Customer&d6657d14f6d3d9de453ff4b0dc686c6d'
     end
   end
 end
