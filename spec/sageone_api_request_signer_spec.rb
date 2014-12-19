@@ -51,4 +51,38 @@ RSpec.describe SageoneApiRequestSigner do
       it { expect(subject.base_url).to eql 'https://api.sageone.com:123/accounts/v1/contacts' }
     end
   end
+
+  describe '#url_params' do
+    it 'should give me a has from the url query' do
+      subject.url = 'https://api.sageone.com/accounts/v1/contacts?response_type=code&client_id=4b64axxxxxxxxxx00710&scope=full_access'
+
+      expect(subject.url_params).to eql({
+        'response_type' => 'code',
+        'client_id' => '4b64axxxxxxxxxx00710',
+        'scope' => 'full_access'
+      })
+    end
+  end
+
+  describe '#parameter_string' do
+    it 'should match the website example' do
+      subject.url = 'https://api.sageone.com/accounts/v1/contacts?config_setting=foo'
+      subject.body_params = {
+        'contact[contact_type_id]' => 1,
+        'contact[name]' => 'My Customer',
+      }
+
+      expect(subject.parameter_string).to eql 'config_setting=foo&contact%5Bcontact_type_id%5D=1&contact%5Bname%5D=My%20Customer'
+    end
+
+    it 'should sort the params' do
+      subject.url = 'https://api.sageone.com/accounts/v1/contacts?zee=4&bee=2'
+      subject.body_params = {
+        'aaa' => 1,
+        'dee' => 3,
+      }
+
+      expect(subject.parameter_string).to eql 'aaa=1&bee=2&dee=3&zee=4'
+    end
+  end
 end

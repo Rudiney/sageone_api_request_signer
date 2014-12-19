@@ -33,4 +33,27 @@ class SageoneApiRequestSigner
       uri.path
     ].join
   end
+
+  def url_params
+    @url_params ||= Hash[URI::decode_www_form(uri.query)]
+  end
+
+  def parameter_string
+    @parameter_string ||= (
+      key_value_pair = percent_encode_pair(url_params.merge(body_params).sort)
+      key_value_pair.map{|pair| pair.join('=') }.join('&')
+    )
+  end
+
+  private
+
+  def percent_encode(str)
+    URI.escape(str.to_s, /[^0-9A-Za-z\-._~]/)
+  end
+
+  def percent_encode_pair(pair)
+    pair.map! do |k,v|
+      [percent_encode(k), percent_encode(v)]
+    end
+  end
 end
