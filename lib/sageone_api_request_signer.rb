@@ -14,7 +14,7 @@ class SageoneApiRequestSigner
   end
 
   def request_method
-    @request_method.to_s.upcase!
+    @request_method.to_s.upcase
   end
 
   def nonce

@@ -36,6 +36,14 @@ RSpec.describe SageoneApiRequestSigner do
     )
   end
 
+  describe '#request_method' do
+    it 'BUG nil the second time we call it!!!' do
+      subject.request_method = 'get'
+      expect(subject.request_method).to eql 'GET'
+      expect(subject.request_method).to eql 'GET'
+    end
+  end
+
   describe '#nonce' do
     it 'should build a rondom one by default' do
       expect(SecureRandom).to receive(:hex).once.and_return('random nonce')
