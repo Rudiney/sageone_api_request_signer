@@ -36,7 +36,7 @@ class SageoneApiRequestSigner
   end
 
   def url_params
-    @url_params ||= Hash[URI::decode_www_form(uri.query)]
+    @url_params ||= Hash[URI::decode_www_form(uri.query || '')]
   end
 
   def parameter_string

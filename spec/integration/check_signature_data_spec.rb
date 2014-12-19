@@ -32,4 +32,12 @@ RSpec.describe SageoneApiRequestSigner do
 
     end
   end
+
+  describe 'bug when the url has no params' do
+    it 'should not raise an error!' do
+      subject.url = 'https://api.sageone.com/test/accounts/v1/contacts'
+      expect(subject.url_params).to eql({})
+      expect(subject.signature).to_not be nil
+    end
+  end
 end
