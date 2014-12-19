@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-To create the signature string, you need to proved these data:
+To create the signature string, you need to provide these data:
 
 ```ruby
   @signer = SageoneApiRequestSigner.new({
@@ -37,7 +37,7 @@ To create the signature string, you need to proved these data:
   })
 ```
 
-With the `@signer` builds the request headers related to the signature part:
+With the `@signer` you can get the request headers related to the signature part:
 
 ```ruby
   @signer.request_headers
