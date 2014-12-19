@@ -3,7 +3,7 @@ RSpec.describe SageoneApiRequestSigner do
   it { expect(subject).to respond_to :url }
   it { expect(subject).to respond_to :body_params }
   it { expect(subject).to respond_to :nonce }
-  it { expect(subject).to respond_to :client_secret }
+  it { expect(subject).to respond_to :signing_secret }
   it { expect(subject).to respond_to :access_token }
 
   it 'should set everything on initialize' do
@@ -12,7 +12,7 @@ RSpec.describe SageoneApiRequestSigner do
       url: 'url',
       body_params: 'body',
       nonce: 'nonce',
-      client_secret: 'secret',
+      signing_secret: 'secret',
       access_token: 'token',
     )
 
@@ -20,7 +20,7 @@ RSpec.describe SageoneApiRequestSigner do
     expect(obj.url).to            eql 'url'
     expect(obj.body_params).to    eql 'body'
     expect(obj.nonce).to          eql 'nonce'
-    expect(obj.client_secret).to  eql 'secret'
+    expect(obj.signing_secret).to  eql 'secret'
     expect(obj.access_token).to   eql 'token'
   end
 
@@ -97,6 +97,14 @@ RSpec.describe SageoneApiRequestSigner do
       }
 
       expect(subject.signature_base_string).to eql 'POST&https%3A%2F%2Fapi.sageone.com%2Faccounts%2Fv1%2Fcontacts&config_setting%3Dfoo%26contact%255Bcontact_type_id%255D%3D1%26contact%255Bname%255D%3DMy%2520Customer&d6657d14f6d3d9de453ff4b0dc686c6d'
+    end
+  end
+
+  describe '#signing_key' do
+    it 'should be the secret & token percent encoded' do
+      subject.signing_secret = '297850d556xxxxxxxxxxxxxxxxxxxxe722db1d2a'
+      subject.access_token = 'cULSIjxxxxxIhbgbjX0R6MkKO'
+      expect(subject.signing_key).to eql '297850d556xxxxxxxxxxxxxxxxxxxxe722db1d2a&cULSIjxxxxxIhbgbjX0R6MkKO'
     end
   end
 end
