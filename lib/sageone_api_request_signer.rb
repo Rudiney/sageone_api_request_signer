@@ -66,6 +66,15 @@ class SageoneApiRequestSigner
     @signature ||= Base64.encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), signing_key, signature_base_string))
   end
 
+  # Just a help to write the signature info on the request headers
+  def request_headers
+    {
+      'Authorization' => "Bearer #{access_token}",
+      'X-Nonce' => nonce,
+      'X-Signature' => signature
+    }
+  end
+
   private
 
   def percent_encode(str)
