@@ -1,0 +1,25 @@
+exclude = '^\.\/(spec)\/'
+
+task_group :quality_assurance do
+  cane max_width: 200, exclude: exclude
+  task :flay, exclude: exclude
+  task :flog, exclude: exclude, methods: true
+end
+
+task_group :setup_env do
+  clean_bundler_env do
+    shell 'bundle install'
+  end
+end
+
+task_group :rspec do
+  clean_bundler_env do
+    rspec coverage: 100
+  end
+end
+
+build :default do
+  task_group :setup_env
+  task_group :quality_assurance
+  task_group :rspec
+end
