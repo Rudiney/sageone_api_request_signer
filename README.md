@@ -1,6 +1,6 @@
 # Sageone Api Request Signer
 
-This gem make the signing process needed to make every request to a [SageOne](http://www.sageone.com) API.
+This gem do the signing process needed to make every request to a [SageOne](http://www.sageone.com) API.
 
 The signing proccess is described here: [https://developers.sageone.com/docs#signing_your_requests](https://developers.sageone.com/docs#signing_your_requests)
 
