@@ -104,6 +104,12 @@ RSpec.describe SageoneApiRequestSigner do
 
       expect(subject.parameter_string).to eql 'aaa=1&bee=2&dee=3&zee=4'
     end
+
+    it 'cant have +, should have %20' do
+      subject.url = 'https://api.sageone.com/accounts/v1/contacts?in_the_url=i+cant+have+pluses'
+      subject.body_params = {'in_the_body_param' => 'cant have pluses here too'}
+      expect(subject.parameter_string).to eql 'in_the_body_param=cant%20have%20pluses%20here%20too&in_the_url=i%20cant%20have%20pluses'
+    end
   end
 
   describe '#signature_base_string' do
