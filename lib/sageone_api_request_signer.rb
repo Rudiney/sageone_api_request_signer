@@ -1,4 +1,6 @@
 require "sageone_api_request_signer/version"
+require "active_support"
+require "active_support/core_ext"
 require "base64"
 
 # "Sign" an Sageone API request call following the steps detailed here:
@@ -41,7 +43,7 @@ class SageoneApiRequestSigner
 
   def parameter_string
     @parameter_string ||= (
-      URI.encode_www_form(url_params.merge(body_params).sort).gsub('+','%20')
+      url_params.merge(body_params).sort.to_h.to_query.gsub('+','%20')
     )
   end
 
