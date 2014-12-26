@@ -61,8 +61,6 @@ RSpec.describe 'testing complex body params' do
     }
   end
 
-  describe
-
   def check_signature!
     RestClient.post subject.url, subject.body_params, headers
 
