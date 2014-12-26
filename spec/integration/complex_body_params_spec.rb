@@ -34,9 +34,32 @@ RSpec.describe 'testing complex body params' do
     check_signature!
   end
 
-  it 'with arrays'
+  it 'with arrays' do
+    subject.body_params = {
+      simple: 'param',
+      complex: [
+        {one:11, two:12, three:13},
+        {one:21, two:22, three:23},
+      ]
+    }
+  end
 
-  it 'with array of hashes'
+  it 'hardcore one' do
+    subject.body_params = {
+      hardcore: [
+        {one:11, two:12, three:13},
+        {four:4, two:22, three:23},
+        {
+          fuck_all: {
+            i_am: 'really nested',
+            no: {
+              i_am: 'damm more'
+            }
+          }
+        }
+      ]
+    }
+  end
 
   describe
 
@@ -44,7 +67,6 @@ RSpec.describe 'testing complex body params' do
     RestClient.post subject.url, subject.body_params, headers
 
     rescue => e
-
       raise e unless e.respond_to? :response
 
       response = JSON.parse(e.response.to_s)
