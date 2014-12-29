@@ -43,7 +43,7 @@ class SageoneApiRequestSigner
 
   def parameter_string
     @parameter_string ||= (
-      url_params.merge(body_params).sort.to_h.to_query.gsub('+','%20')
+      Hash[url_params.merge(body_params).sort].to_query.gsub('+','%20')
     )
   end
 
