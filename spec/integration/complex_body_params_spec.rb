@@ -34,31 +34,15 @@ RSpec.describe 'testing complex body params' do
     check_signature!
   end
 
-  it 'with arrays' do
+  it 'with something like "arrays"' do
     subject.body_params = {
       simple: 'param',
-      complex: [
-        {one:11, two:12, three:13},
-        {one:21, two:22, three:23},
-      ]
+      complex: {
+        0 => {one:11, two:12, three:13},
+        1 => {one:21, two:22, three:23},
+      }
     }
-  end
-
-  it 'hardcore one' do
-    subject.body_params = {
-      hardcore: [
-        {one:11, two:12, three:13},
-        {four:4, two:22, three:23},
-        {
-          fuck_all: {
-            i_am: 'really nested',
-            no: {
-              i_am: 'damm more'
-            }
-          }
-        }
-      ]
-    }
+    check_signature!
   end
 
   def check_signature!
