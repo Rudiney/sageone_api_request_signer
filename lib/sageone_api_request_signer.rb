@@ -27,12 +27,13 @@ class SageoneApiRequestSigner
     @uri ||= URI(url)
   end
 
+  # Return the base URL without query string and fragment
   def base_url
     @base_url ||= [
       uri.scheme,
       '://',
       uri.host,
-      (":#{uri.port}" if uri.port != uri.default_port),
+      uri_port_string,
       uri.path
     ].join
   end
@@ -80,5 +81,9 @@ class SageoneApiRequestSigner
 
   def percent_encode(str)
     URI.escape(str.to_s, /[^0-9A-Za-z\-._~]/)
+  end
+
+  def uri_port_string
+    uri.port == uri.default_port ? "" : ":#{uri.port}"
   end
 end
