@@ -114,7 +114,9 @@ RSpec.describe SageoneApiRequestSigner do
 
   describe '#signature_base_string' do
     it 'should follow the website example' do
-      expect(subject.signature_base_string).to eql 'POST&https%3A%2F%2Fapi.sageone.com%2Faccounts%2Fv1%2Fcontacts&config_setting%3Dfoo%26contact%255Bcontact_type_id%255D%3D1%26contact%255Bname%255D%3DMy%2520Customer&d6657d14f6d3d9de453ff4b0dc686c6d'
+      expected = 'POST&https%3A%2F%2Fapi.sageone.com%2Faccounts%2Fv1%2Fcontacts&config_setting%3Dfoo%26' \
+                 'contact%255Bcontact_type_id%255D%3D1%26contact%255Bname%255D%3DMy%2520Customer&d6657d14f6d3d9de453ff4b0dc686c6d'
+      expect(subject.signature_base_string).to eql expected
     end
   end
 
